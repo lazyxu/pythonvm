@@ -15,6 +15,12 @@ public:
 
     void print() override;
     Object *add(Object *o) override;
+    Object *less(Object *o) override;
+    Object *le(Object *o) override;
+    Object *eq(Object *o) override;
+    Object *ne(Object *o) override;
+    Object *greater(Object *o) override;
+    Object *ge(Object *o) override;
 
 private:
     int value_;

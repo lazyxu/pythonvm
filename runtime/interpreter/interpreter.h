@@ -14,6 +14,8 @@ public:
 private:
     ArrayList<Object *> *stack_;
     ArrayList<Object *> *consts_;
+    inline void push(Object *o);
+    inline Object *pop();
 };
 
 #endif // PYTHONVM_RUNTIME_INTERPRETER_INTERPRETER_H

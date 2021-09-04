@@ -1,1 +1,6 @@
-print(1 + 2 * 3)
+if 2 > 1:
+    print(2)
+else:
+    print(1)
+
+print(3)
