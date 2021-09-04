@@ -2,6 +2,7 @@
 // Created by xuliang on 2021/9/2.
 //
 
+#include "file/binary_file_parser.h"
 #include "utils/buffered_input_stream.h"
 #include "utils/logger.h"
 #include <iostream>
@@ -14,6 +15,7 @@ int main(int argc, char **argv) {
     }
 
     BufferedInputStream stream(argv[1]);
-    LOG(INFO) << "magic number is 0x" << hex << stream.read_int();
+    BinaryFileParser parser(&stream);
+    CodeObject *object = parser.parse();
     return 0;
 }

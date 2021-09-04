@@ -7,4 +7,12 @@ SET(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb")
 
 SET(CMAKE_EXE_LINKER_FLAGS "-rdynamic")
 
-add_executable(pythonvm main.cpp utils/logger.cpp)
+add_executable(pythonvm
+        main.cpp
+        utils/logger.cpp
+        runtime/types/object.cpp
+        runtime/types/string.cpp
+        runtime/types/integer.cpp
+        file/code_object.cpp
+        file/binary_file_parser.cpp
+        )
