@@ -6,9 +6,11 @@
 
 #include "../../utils/logger.h"
 #include "../types/integer.h"
+#include "../universe.h"
 #include "bytecode.h"
 
 void Interpreter::push(Object *o) { stack_->push_back(o); }
+
 Object *Interpreter::pop() {
     auto v = stack_->back();
     stack_->pop_back();
@@ -79,7 +81,7 @@ void Interpreter::run(CodeObject *codes) {
             break;
         case ByteCode::POP_JUMP_IF_FALSE:
             v = pop();
-            if (dynamic_cast<Integer *>(v)->value() == 0) {
+            if (v == Universe::False) {
                 pc = op_arg;
             }
             break;

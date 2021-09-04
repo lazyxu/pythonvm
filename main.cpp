@@ -4,6 +4,7 @@
 
 #include "file/binary_file_parser.h"
 #include "runtime/interpreter/interpreter.h"
+#include "runtime/universe.h"
 #include "utils/buffered_input_stream.h"
 #include "utils/logger.h"
 #include <iostream>
@@ -15,6 +16,7 @@ int main(int argc, char **argv) {
         LOG(FATAL) << "vm need a parameter: filename";
     }
 
+    Universe::genesis();
     BufferedInputStream stream(argv[1]);
     BinaryFileParser parser(&stream);
     CodeObject *object = parser.parse();

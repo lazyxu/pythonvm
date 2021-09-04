@@ -10,6 +10,7 @@ SET(CMAKE_EXE_LINKER_FLAGS "-rdynamic")
 add_executable(pythonvm
         main.cpp
         utils/logger.cpp
+        runtime/universe.cpp
         runtime/types/object.cpp
         runtime/types/string.cpp
         runtime/types/integer.cpp
