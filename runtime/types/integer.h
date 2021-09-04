@@ -9,9 +9,12 @@
 
 class Integer : public Object {
 public:
-    Integer(int value) : value_(value) {}
+    explicit Integer(int value) : value_(value) {}
 
-    int value() { return value_; };
+    int value() const { return value_; };
+
+    void print() override;
+    Object *add(Object *o) override;
 
 private:
     int value_;

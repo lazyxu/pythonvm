@@ -16,6 +16,8 @@ public:
 
     const char *value() { return value_; };
 
+    const uint32_t length() { return length_; };
+
 private:
     char *value_;
     uint32_t length_;

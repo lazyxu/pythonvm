@@ -3,6 +3,7 @@
 //
 
 #include "file/binary_file_parser.h"
+#include "runtime/interpreter/interpreter.h"
 #include "utils/buffered_input_stream.h"
 #include "utils/logger.h"
 #include <iostream>
@@ -17,5 +18,7 @@ int main(int argc, char **argv) {
     BufferedInputStream stream(argv[1]);
     BinaryFileParser parser(&stream);
     CodeObject *object = parser.parse();
+    Interpreter interpreter;
+    interpreter.run(object);
     return 0;
 }

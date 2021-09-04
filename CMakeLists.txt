@@ -13,6 +13,8 @@ add_executable(pythonvm
         runtime/types/object.cpp
         runtime/types/string.cpp
         runtime/types/integer.cpp
+        runtime/interpreter/bytecode.cpp
+        runtime/interpreter/interpreter.cpp
         file/code_object.cpp
         file/binary_file_parser.cpp
         )
