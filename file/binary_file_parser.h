@@ -15,7 +15,14 @@ public:
 
 private:
     BufferedInputStream *file_stream_;
+    ArrayList<String *> string_table_;
     CodeObject *get_code_object();
+    String *get_byte_codes();
+    String *get_string();
+    String *get_no_table();
+    String *get_name();
+    ArrayList<Object *> *try_get_tuple();
+    ArrayList<Object *> *get_tuple();
 };
 
 #endif // PYTHONVM_FILE_BINARY_FILE_PARSER_H
