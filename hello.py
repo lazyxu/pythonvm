@@ -1,6 +1,5 @@
-if 2 > 1:
-    print(2)
-else:
-    print(1)
+i = 0
 
-print(3)
+while i < 2:
+    print(i)
+    i = i + 1

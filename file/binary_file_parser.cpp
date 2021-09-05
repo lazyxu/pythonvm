@@ -4,6 +4,7 @@
 
 #include "binary_file_parser.h"
 #include "../runtime/types/integer.h"
+#include "../runtime/universe.h"
 #include "../utils/logger.h"
 #include <iomanip>
 BinaryFileParser::BinaryFileParser(BufferedInputStream *stream) {
@@ -119,7 +120,7 @@ ArrayList<Object *> *BinaryFileParser::get_tuple() {
             list->push_back(new Integer(file_stream_->read_int()));
             break;
         case 'N':
-            list->push_back(nullptr);
+            list->push_back(Universe::None);
             break;
         case 't':
             str = get_string();

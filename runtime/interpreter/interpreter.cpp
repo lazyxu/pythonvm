@@ -20,8 +20,9 @@ Object *Interpreter::pop() {
 void Interpreter::run(CodeObject *codes) {
     uint32_t pc = 0;
     auto code_length = codes->bytecodes_->length();
-    stack_ = new ArrayList<Object *>(codes->stack_size_);
+    stack_ = new ArrayList<Object *>();
     consts_ = codes->consts_;
+    names_ = codes->names_;
 
     while (pc < code_length) {
         auto op_code = codes->bytecodes_->value()[pc++];
@@ -85,8 +86,25 @@ void Interpreter::run(CodeObject *codes) {
                 pc = op_arg;
             }
             break;
+        case ByteCode::JUMP_ABSOLUTE:
+            pc = op_arg;
+            break;
         case ByteCode::JUMP_FORWARD:
             pc += op_arg;
+            break;
+        case ByteCode::POP_BLOCK:
+            break;
+        case ByteCode::SETUP_LOOP:
+            break;
+        case ByteCode::STORE_NAME:
+            v = names_->at(op_arg);
+            w = pop();
+            locals_[v] = w;
+            break;
+        case ByteCode::LOAD_NAME:
+            v = names_->at(op_arg);
+            w = locals_.at(v);
+            push(w);
             break;
         default:
             LOG(FATAL) << "Error: Unrecognized byte code " << int(op_code);

@@ -14,6 +14,8 @@ public:
 private:
     ArrayList<Object *> *stack_;
     ArrayList<Object *> *consts_;
+    ArrayList<Object *> *names_;
+    Map<Object *, Object *> locals_;
     inline void push(Object *o);
     inline Object *pop();
 };
