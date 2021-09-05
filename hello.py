@@ -1,5 +1,8 @@
 i = 0
 
-while i < 2:
-    print(i)
+while i < 5:
     i = i + 1
+    if i > 3:
+        break
+
+print(i)

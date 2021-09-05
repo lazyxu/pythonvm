@@ -34,6 +34,7 @@ void Interpreter::run(CodeObject *codes) {
         }
 
         Object *v, *w;
+        Block *b;
 
         switch (op_code) {
         case ByteCode::LOAD_CONST:
@@ -93,8 +94,23 @@ void Interpreter::run(CodeObject *codes) {
             pc += op_arg;
             break;
         case ByteCode::POP_BLOCK:
+            b = loop_stack_.back();
+            loop_stack_.pop_back();
+            while (stack_->size() > b->level_) {
+                pop();
+            }
+            break;
+        case ByteCode::BREAK_LOOP:
+            b = loop_stack_.back();
+            loop_stack_.pop_back();
+            while (stack_->size() > b->level_) {
+                pop();
+            }
+            pc = b->target_;
             break;
         case ByteCode::SETUP_LOOP:
+            loop_stack_.push_back(
+                new Block(op_code, pc + op_arg, stack_->size()));
             break;
         case ByteCode::STORE_NAME:
             v = names_->at(op_arg);
