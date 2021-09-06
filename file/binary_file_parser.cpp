@@ -53,7 +53,7 @@ CodeObject *BinaryFileParser::get_code_object() {
 }
 
 String *BinaryFileParser::get_byte_codes() {
-    assert(file_stream_->read() == 's');
+    ASSERT(file_stream_->read() == 's');
 
     return get_string();
 }

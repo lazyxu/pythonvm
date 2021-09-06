@@ -4,7 +4,7 @@
 
 #include "logger.h"
 
-static Level gLevel = DEBUG;
+static Level gLevel = FATAL;
 
 void SetLogLevel(Level level) { gLevel = level; }
 

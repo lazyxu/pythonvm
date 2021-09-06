@@ -5,15 +5,15 @@
 #ifndef PYTHONVM_RUNTIME_TYPES_OBJECT_H
 #define PYTHONVM_RUNTIME_TYPES_OBJECT_H
 
+#include "../../utils/assert.h"
 #include "klass.h"
-#include <cassert>
 
 class Object {
 public:
     Object() = default;
     virtual ~Object() = default;
     Klass *klass() {
-        assert(klass_ != nullptr);
+        ASSERT(klass_ != nullptr);
         return klass_;
     }
     void set_klass(Klass *klass) { klass_ = klass; }

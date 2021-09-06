@@ -119,6 +119,7 @@ void Interpreter::run(CodeObject *codes) {
             break;
         case ByteCode::LOAD_NAME:
             v = names_->at(op_arg);
+            ASSERT(locals_.contains(v));
             w = locals_.at(v);
             push(w);
             break;
