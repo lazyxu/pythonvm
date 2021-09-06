@@ -7,20 +7,36 @@
 
 #include "object.h"
 
+class IntegerKlass : public Klass {
+public:
+    static IntegerKlass *get_instance();
+    void print(Object *o) override;
+
+    Object *less(Object *x, Object *y) override;
+    Object *le(Object *x, Object *y) override;
+    Object *eq(Object *x, Object *y) override;
+    Object *ne(Object *x, Object *y) override;
+    Object *greater(Object *x, Object *y) override;
+    Object *ge(Object *x, Object *y) override;
+
+    Object *add(Object *x, Object *y) override;
+    Object *sub(Object *x, Object *y) override;
+    Object *mul(Object *x, Object *y) override;
+    Object *div(Object *x, Object *y) override;
+    Object *mod(Object *x, Object *y) override;
+
+private:
+    IntegerKlass();
+    static IntegerKlass *klass;
+};
+
 class Integer : public Object {
 public:
-    explicit Integer(int value) : value_(value) {}
+    explicit Integer(int value) : value_(value) {
+        set_klass(IntegerKlass::get_instance());
+    }
 
     int value() const { return value_; };
-
-    void print() override;
-    Object *add(Object *o) override;
-    Object *less(Object *o) override;
-    Object *le(Object *o) override;
-    Object *eq(Object *o) override;
-    Object *ne(Object *o) override;
-    Object *greater(Object *o) override;
-    Object *ge(Object *o) override;
 
 private:
     int value_;

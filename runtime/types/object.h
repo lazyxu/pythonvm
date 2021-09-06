@@ -5,16 +5,30 @@
 #ifndef PYTHONVM_RUNTIME_TYPES_OBJECT_H
 #define PYTHONVM_RUNTIME_TYPES_OBJECT_H
 
+#include "klass.h"
+#include <cassert>
+
 class Object {
 public:
-    virtual void print();
-    virtual Object *add(Object *o);
-    virtual Object *less(Object *o);
-    virtual Object *le(Object *o);
-    virtual Object *eq(Object *o);
-    virtual Object *ne(Object *o);
-    virtual Object *greater(Object *o);
-    virtual Object *ge(Object *o);
+    Object() = default;
+    virtual ~Object() = default;
+    Klass *klass() {
+        assert(klass_ != nullptr);
+        return klass_;
+    }
+    void set_klass(Klass *klass) { klass_ = klass; }
+
+    void print() { klass_->print(this); }
+    Object *add(Object *o) { return klass_->add(this, o); };
+    Object *less(Object *o) { return klass_->less(this, o); };
+    Object *le(Object *o) { return klass_->le(this, o); };
+    Object *eq(Object *o) { return klass_->eq(this, o); };
+    Object *ne(Object *o) { return klass_->ne(this, o); };
+    Object *greater(Object *o) { return klass_->greater(this, o); };
+    Object *ge(Object *o) { return klass_->ge(this, o); };
+
+private:
+    Klass *klass_;
 };
 
 #endif // PYTHONVM_RUNTIME_TYPES_OBJECT_H

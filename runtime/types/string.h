@@ -8,6 +8,18 @@
 #include "object.h"
 #include <cstdint>
 
+class StringKlass : public Klass {
+public:
+    static StringKlass *get_instance();
+    void print(Object *o) override;
+
+    Object *eq(Object *x, Object *y) override;
+
+private:
+    StringKlass();
+    static StringKlass *klass;
+};
+
 class String : public Object {
 public:
     explicit String(const char *value);

@@ -3,42 +3,135 @@
 //
 
 #include "integer.h"
-#include "../universe.h"
 
+#include "../universe.h"
 #include <iostream>
 
-void Integer::print() { std::cout << value_; }
+IntegerKlass::IntegerKlass() {}
 
-Object *Integer::add(Object *o) {
-    return new Integer(value_ + dynamic_cast<Integer *>(o)->value_);
+IntegerKlass *IntegerKlass::klass = nullptr;
+
+IntegerKlass *IntegerKlass::get_instance() {
+    if (klass == nullptr) {
+        klass = new IntegerKlass();
+    }
+    return klass;
 }
 
-Object *Integer::less(Object *o) {
-    return value_ < dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                       : Universe::False;
+void IntegerKlass::print(Object *o) {
+    auto *oo = dynamic_cast<Integer *>(o);
+
+    assert(oo != nullptr && oo->klass() == this);
+
+    std::cout << oo->value();
 }
 
-Object *Integer::le(Object *o) {
-    return value_ <= dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                        : Universe::False;
+Object *IntegerKlass::less(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() < yy->value() ? Universe::True : Universe::False;
 }
 
-Object *Integer::eq(Object *o) {
-    return value_ == dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                        : Universe::False;
+Object *IntegerKlass::le(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() <= yy->value() ? Universe::True : Universe::False;
 }
 
-Object *Integer::ne(Object *o) {
-    return value_ != dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                        : Universe::False;
+Object *IntegerKlass::eq(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() == yy->value() ? Universe::True : Universe::False;
 }
 
-Object *Integer::greater(Object *o) {
-    return value_ > dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                       : Universe::False;
+Object *IntegerKlass::ne(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() != yy->value() ? Universe::True : Universe::False;
 }
 
-Object *Integer::ge(Object *o) {
-    return value_ >= dynamic_cast<Integer *>(o)->value_ ? Universe::True
-                                                        : Universe::False;
+Object *IntegerKlass::greater(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() > yy->value() ? Universe::True : Universe::False;
+}
+
+Object *IntegerKlass::ge(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return xx->value() >= yy->value() ? Universe::True : Universe::False;
+}
+
+Object *IntegerKlass::add(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return new Integer(xx->value() + yy->value());
+}
+
+Object *IntegerKlass::sub(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return new Integer(xx->value() - yy->value());
+}
+
+Object *IntegerKlass::mul(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return new Integer(xx->value() * yy->value());
+}
+
+Object *IntegerKlass::div(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return new Integer(xx->value() / yy->value());
+}
+
+Object *IntegerKlass::mod(Object *x, Object *y) {
+    auto *xx = dynamic_cast<Integer *>(x);
+    auto *yy = dynamic_cast<Integer *>(y);
+
+    assert(xx != nullptr && (xx->klass() == (Klass *)this));
+    assert(yy != nullptr && (yy->klass() == (Klass *)this));
+
+    return new Integer(xx->value() % yy->value());
 }
