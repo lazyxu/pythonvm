@@ -22,6 +22,8 @@ public:
     static const unsigned char JUMP_ABSOLUTE = 113;
     static const unsigned char POP_JUMP_IF_FALSE = 114;
     static const unsigned char SETUP_LOOP = 120;
+    static const unsigned char CALL_FUNCTION = 131;
+    static const unsigned char MAKE_FUNCTION = 132;
     enum Compare {
         LESS = 0,
         LESS_EQUAL,

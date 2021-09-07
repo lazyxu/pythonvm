@@ -5,6 +5,7 @@
 #include "interpreter.h"
 
 #include "../../utils/logger.h"
+#include "../types/function.h"
 #include "../types/integer.h"
 #include "../universe.h"
 #include "bytecode.h"
@@ -30,6 +31,7 @@ void Interpreter::run(CodeObject *codes) {
 
         Object *v, *w;
         Block *b;
+        FunctionObject *fo;
 
         switch (op_code) {
         case ByteCode::LOAD_CONST:
@@ -117,6 +119,11 @@ void Interpreter::run(CodeObject *codes) {
             ASSERT(frame_->locals()->contains(v));
             w = frame_->locals()->at(v);
             push(w);
+            break;
+        case ByteCode::MAKE_FUNCTION:
+            v = pop();
+            fo = new FunctionObject(v);
+            push(fo);
             break;
         default:
             LOG(FATAL) << "Error: Unrecognized byte code " << int(op_code);
