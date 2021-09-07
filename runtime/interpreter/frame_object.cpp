@@ -14,3 +14,6 @@ FrameObject::FrameObject(CodeObject *codes) {
     codes_ = codes;
     pc_ = 0;
 }
+
+FrameObject::FrameObject(FunctionObject *func)
+    : FrameObject(func->code_object_) {}

@@ -24,7 +24,6 @@ public:
 
     String *func_name() { return code_object_->co_name_; };
 
-private:
     CodeObject *code_object_;
 };
 

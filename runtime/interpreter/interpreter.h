@@ -17,6 +17,9 @@ private:
     FrameObject *frame_;
     inline void push(Object *o);
     inline Object *pop();
+    void build_frame(Object *v);
+    void eval_frame();
+    void destroy_frame();
 };
 
 #endif // PYTHONVM_RUNTIME_INTERPRETER_INTERPRETER_H

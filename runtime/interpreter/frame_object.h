@@ -6,11 +6,13 @@
 #define PYTHONVM_RUNTIME_INTERPRETER_FRAME_OBJECT_H
 
 #include "../../file/code_object.h"
+#include "../types/function.h"
 #include "block.h"
 
 class FrameObject {
 public:
     explicit FrameObject(CodeObject *codes);
+    explicit FrameObject(FunctionObject *func);
     ArrayList<Object *> *stack() const { return stack_; }
     ArrayList<Object *> *consts() const { return consts_; }
     ArrayList<Object *> *names() const { return names_; }
@@ -25,7 +27,11 @@ public:
     }
     bool has_more_codes() { return pc_ < codes_->bytecodes_->length(); }
 
+    void set_prev(FrameObject *prev) { prev_ = prev; }
+    FrameObject *prev() { return prev_; };
+
 private:
+    FrameObject *prev_;
     ArrayList<Object *> *stack_;
     ArrayList<Object *> *consts_;
     ArrayList<Object *> *names_;

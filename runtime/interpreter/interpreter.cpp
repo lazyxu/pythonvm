@@ -20,7 +20,11 @@ Object *Interpreter::pop() {
 
 void Interpreter::run(CodeObject *codes) {
     frame_ = new FrameObject(codes);
+    eval_frame();
+    destroy_frame();
+}
 
+void Interpreter::eval_frame() {
     while (frame_->has_more_codes()) {
         auto op_code = frame_->get_op_code();
         bool has_argument = (op_code & 0xFF) >= ByteCode::HAVE_ARGUMENT;
@@ -34,6 +38,9 @@ void Interpreter::run(CodeObject *codes) {
         FunctionObject *fo;
 
         switch (op_code) {
+        case ByteCode::POP_TOP:
+            pop();
+            break;
         case ByteCode::LOAD_CONST:
             push(frame_->consts()->at(op_arg));
             break;
@@ -50,7 +57,12 @@ void Interpreter::run(CodeObject *codes) {
             push(v->add(w));
             break;
         case ByteCode::RETURN_VALUE:
-            pop();
+            v = pop();
+            if (frame_->prev() == nullptr) {
+                return;
+            }
+            destroy_frame();
+            push(v);
             break;
         case ByteCode::COMPARE:
             w = pop();
@@ -125,8 +137,24 @@ void Interpreter::run(CodeObject *codes) {
             fo = new FunctionObject(v);
             push(fo);
             break;
+        case ByteCode::CALL_FUNCTION:
+            v = pop();
+            build_frame(v);
+            break;
         default:
             LOG(FATAL) << "Error: Unrecognized byte code " << int(op_code);
         }
     }
+}
+
+void Interpreter::build_frame(Object *v) {
+    auto frame = new FrameObject(dynamic_cast<FunctionObject *>(v));
+    frame->set_prev(frame_);
+    frame_ = frame;
+}
+
+void Interpreter::destroy_frame() {
+    auto *temp = frame_;
+    frame_ = frame_->prev();
+    delete temp;
 }
