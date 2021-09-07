@@ -7,17 +7,14 @@
 
 #include "../../file/code_object.h"
 #include "block.h"
+#include "frame_object.h"
 
 class Interpreter {
 public:
     void run(CodeObject *codes);
 
 private:
-    ArrayList<Object *> *stack_;
-    ArrayList<Object *> *consts_;
-    ArrayList<Object *> *names_;
-    Map<Object *, Object *> locals_;
-    ArrayList<Block *> loop_stack_;
+    FrameObject *frame_;
     inline void push(Object *o);
     inline Object *pop();
 };

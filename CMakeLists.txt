@@ -17,6 +17,7 @@ add_executable(pythonvm
         runtime/types/integer.cpp
         runtime/interpreter/bytecode.cpp
         runtime/interpreter/interpreter.cpp
+        runtime/interpreter/frame_object.cpp
         file/code_object.cpp
         file/binary_file_parser.cpp
         )

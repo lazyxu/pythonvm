@@ -9,28 +9,23 @@
 #include "../universe.h"
 #include "bytecode.h"
 
-void Interpreter::push(Object *o) { stack_->push_back(o); }
+void Interpreter::push(Object *o) { frame_->stack()->push_back(o); }
 
 Object *Interpreter::pop() {
-    auto v = stack_->back();
-    stack_->pop_back();
+    auto v = frame_->stack()->back();
+    frame_->stack()->pop_back();
     return v;
 }
 
 void Interpreter::run(CodeObject *codes) {
-    uint32_t pc = 0;
-    auto code_length = codes->bytecodes_->length();
-    stack_ = new ArrayList<Object *>();
-    consts_ = codes->consts_;
-    names_ = codes->names_;
+    frame_ = new FrameObject(codes);
 
-    while (pc < code_length) {
-        auto op_code = codes->bytecodes_->value()[pc++];
+    while (frame_->has_more_codes()) {
+        auto op_code = frame_->get_op_code();
         bool has_argument = (op_code & 0xFF) >= ByteCode::HAVE_ARGUMENT;
         int op_arg = -1;
         if (has_argument) {
-            int b1 = (codes->bytecodes_->value()[pc++] & 0xFF);
-            op_arg = ((codes->bytecodes_->value()[pc++] & 0xFF) << 8) | b1;
+            op_arg = frame_->get_op_arg();
         }
 
         Object *v, *w;
@@ -38,7 +33,7 @@ void Interpreter::run(CodeObject *codes) {
 
         switch (op_code) {
         case ByteCode::LOAD_CONST:
-            push(consts_->at(op_arg));
+            push(frame_->consts()->at(op_arg));
             break;
         case ByteCode::PRINT_ITEM:
             v = pop();
@@ -84,43 +79,43 @@ void Interpreter::run(CodeObject *codes) {
         case ByteCode::POP_JUMP_IF_FALSE:
             v = pop();
             if (v == Universe::False) {
-                pc = op_arg;
+                frame_->set_pc(op_arg);
             }
             break;
         case ByteCode::JUMP_ABSOLUTE:
-            pc = op_arg;
+            frame_->set_pc(op_arg);
             break;
         case ByteCode::JUMP_FORWARD:
-            pc += op_arg;
+            frame_->set_pc(frame_->get_pc() + op_arg);
             break;
         case ByteCode::POP_BLOCK:
-            b = loop_stack_.back();
-            loop_stack_.pop_back();
-            while (stack_->size() > b->level_) {
+            b = frame_->loop_stack()->back();
+            frame_->loop_stack()->pop_back();
+            while (frame_->stack()->size() > b->level_) {
                 pop();
             }
             break;
         case ByteCode::BREAK_LOOP:
-            b = loop_stack_.back();
-            loop_stack_.pop_back();
-            while (stack_->size() > b->level_) {
+            b = frame_->loop_stack()->back();
+            frame_->loop_stack()->pop_back();
+            while (frame_->stack()->size() > b->level_) {
                 pop();
             }
-            pc = b->target_;
+            frame_->set_pc(b->target_);
             break;
         case ByteCode::SETUP_LOOP:
-            loop_stack_.push_back(
-                new Block(op_code, pc + op_arg, stack_->size()));
+            frame_->loop_stack()->push_back(new Block(
+                op_code, frame_->get_pc() + op_arg, frame_->stack()->size()));
             break;
         case ByteCode::STORE_NAME:
-            v = names_->at(op_arg);
+            v = frame_->names()->at(op_arg);
             w = pop();
-            locals_[v] = w;
+            (*frame_->locals())[v] = w;
             break;
         case ByteCode::LOAD_NAME:
-            v = names_->at(op_arg);
-            ASSERT(locals_.contains(v));
-            w = locals_.at(v);
+            v = frame_->names()->at(op_arg);
+            ASSERT(frame_->locals()->contains(v));
+            w = frame_->locals()->at(v);
             push(w);
             break;
         default:
