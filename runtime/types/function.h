@@ -24,7 +24,11 @@ public:
 
     String *func_name() { return code_object_->co_name_; };
 
+    Map<Object *, Object *> *globals() { return globals_; }
+    void set_globals(Map<Object *, Object *> *globals) { globals_ = globals; }
+
     CodeObject *code_object_;
+    Map<Object *, Object *> *globals_;
 };
 
 #endif // PYTHONVM_RUNTIME_TYPES_FUNCTION_H

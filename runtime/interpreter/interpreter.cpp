@@ -126,15 +126,42 @@ void Interpreter::eval_frame() {
             w = pop();
             (*frame_->locals())[v] = w;
             break;
+        case ByteCode::STORE_GLOBAL:
+            v = frame_->names()->at(op_arg);
+            w = pop();
+            (*frame_->globals())[v] = w;
+            break;
         case ByteCode::LOAD_NAME:
             v = frame_->names()->at(op_arg);
-            ASSERT(frame_->locals()->contains(v));
-            w = frame_->locals()->at(v);
-            push(w);
-            break;
+            if (frame_->locals()->contains(v)) {
+                w = frame_->locals()->at(v);
+                if (w != Universe::None) {
+                    push(w);
+                    break;
+                }
+            }
+            if (frame_->globals()->contains(v)) {
+                w = frame_->globals()->at(v);
+                if (w != Universe::None) {
+                    push(w);
+                    break;
+                }
+            }
+            push(Universe::None);
+        case ByteCode::LOAD_GLOBAL:
+            v = frame_->names()->at(op_arg);
+            if (frame_->globals()->contains(v)) {
+                w = frame_->globals()->at(v);
+                if (w != Universe::None) {
+                    push(w);
+                    break;
+                }
+            }
+            push(Universe::None);
         case ByteCode::MAKE_FUNCTION:
             v = pop();
             fo = new FunctionObject(v);
+            fo->set_globals(frame_->globals());
             push(fo);
             break;
         case ByteCode::CALL_FUNCTION:

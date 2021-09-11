@@ -10,6 +10,7 @@ FrameObject::FrameObject(CodeObject *codes) {
 
     stack_ = new ArrayList<Object *>();
     locals_ = new Map<Object *, Object *>();
+    globals_ = locals_;
     loop_stack_ = new ArrayList<Block *>();
     codes_ = codes;
     pc_ = 0;

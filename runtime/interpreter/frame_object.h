@@ -29,6 +29,7 @@ public:
 
     void set_prev(FrameObject *prev) { prev_ = prev; }
     FrameObject *prev() { return prev_; };
+    Map<Object *, Object *> *globals() { return globals_; }
 
 private:
     FrameObject *prev_;
@@ -36,6 +37,7 @@ private:
     ArrayList<Object *> *consts_;
     ArrayList<Object *> *names_;
     Map<Object *, Object *> *locals_;
+    Map<Object *, Object *> *globals_;
     ArrayList<Block *> *loop_stack_;
     CodeObject *codes_;
     int pc_;
