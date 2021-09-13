@@ -19,7 +19,7 @@ private:
     FrameObject *frame_;
     inline void push(Object *o);
     inline Object *pop();
-    void build_frame(Object *v);
+    void build_frame(Object *v, ArrayList<Object *> *args);
     void eval_frame();
     void destroy_frame();
 };

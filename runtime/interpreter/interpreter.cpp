@@ -40,6 +40,7 @@ void Interpreter::eval_frame() {
             op_arg = frame_->get_op_arg();
         }
 
+        ArrayList<Object *> *args = nullptr;
         Object *v, *w;
         Block *b;
         FunctionObject *fo;
@@ -186,8 +187,22 @@ void Interpreter::eval_frame() {
             push(fo);
             break;
         case ByteCode::CALL_FUNCTION:
+            if (op_arg > 0) {
+                args = new ArrayList<Object *>();
+                args->resize(op_arg);
+                while (op_arg--) {
+                    (*args)[op_arg] = pop();
+                }
+            }
             v = pop();
-            build_frame(v);
+            build_frame(v, args);
+            delete args;
+            break;
+        case ByteCode::LOAD_FAST:
+            push(frame_->args()->at(op_arg));
+            break;
+        case ByteCode::STORE_FAST:
+            (*frame_->args())[op_arg] = pop();
             break;
         default:
             LOG(FATAL) << "Error: Unrecognized byte code " << int(op_code);
@@ -195,8 +210,8 @@ void Interpreter::eval_frame() {
     }
 }
 
-void Interpreter::build_frame(Object *v) {
-    auto frame = new FrameObject(dynamic_cast<FunctionObject *>(v));
+void Interpreter::build_frame(Object *v, ArrayList<Object *> *args) {
+    auto frame = new FrameObject(dynamic_cast<FunctionObject *>(v), args);
     frame->set_prev(frame_);
     frame_ = frame;
 }

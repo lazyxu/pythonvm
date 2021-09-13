@@ -12,7 +12,8 @@
 class FrameObject {
 public:
     explicit FrameObject(CodeObject *codes);
-    explicit FrameObject(FunctionObject *func);
+    explicit FrameObject(FunctionObject *func, ArrayList<Object *> *args);
+    ArrayList<Object *> *args() const { return args_; }
     ArrayList<Object *> *stack() const { return stack_; }
     ArrayList<Object *> *consts() const { return consts_; }
     ArrayList<Object *> *names() const { return names_; }
@@ -32,7 +33,8 @@ public:
     Map<Object *, Object *> *globals() { return globals_; }
 
 private:
-    FrameObject *prev_;
+    FrameObject *prev_ = nullptr;
+    ArrayList<Object *> *args_;
     ArrayList<Object *> *stack_;
     ArrayList<Object *> *consts_;
     ArrayList<Object *> *names_;

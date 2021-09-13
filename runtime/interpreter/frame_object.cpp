@@ -16,5 +16,9 @@ FrameObject::FrameObject(CodeObject *codes) {
     pc_ = 0;
 }
 
-FrameObject::FrameObject(FunctionObject *func)
-    : FrameObject(func->code_object_) {}
+FrameObject::FrameObject(FunctionObject *func, ArrayList<Object *> *args)
+    : FrameObject(func->code_object_) {
+    if (args) {
+        args_ = new ArrayList<Object *>(*args);
+    }
+}
