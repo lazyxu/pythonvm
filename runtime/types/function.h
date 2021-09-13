@@ -27,8 +27,16 @@ public:
     Map<Object *, Object *> *globals() { return globals_; }
     void set_globals(Map<Object *, Object *> *globals) { globals_ = globals; }
 
+    ArrayList<Object *> *defaults() { return defaults_; }
+    void set_defaults(ArrayList<Object *> *defaults) {
+        if (defaults) {
+            defaults_ = new ArrayList<Object *>(*defaults);
+        }
+    }
+
     CodeObject *code_object_;
     Map<Object *, Object *> *globals_;
+    ArrayList<Object *> *defaults_;
 };
 
 #endif // PYTHONVM_RUNTIME_TYPES_FUNCTION_H

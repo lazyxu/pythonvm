@@ -184,6 +184,15 @@ void Interpreter::eval_frame() {
             v = pop();
             fo = new FunctionObject(v);
             fo->set_globals(frame_->globals());
+            if (op_arg > 0) {
+                args = new ArrayList<Object *>();
+                args->resize(op_arg);
+                while (op_arg--) {
+                    (*args)[op_arg] = pop();
+                }
+            }
+            fo->set_defaults(args);
+            delete args;
             push(fo);
             break;
         case ByteCode::CALL_FUNCTION:
@@ -202,7 +211,10 @@ void Interpreter::eval_frame() {
             push(frame_->args()->at(op_arg));
             break;
         case ByteCode::STORE_FAST:
-            (*frame_->args())[op_arg] = pop();
+            if (op_arg >= frame_->args()->size()) {
+                frame_->args()->resize(op_arg + 1);
+            }
+            frame_->args()->at(op_arg) = pop();
             break;
         default:
             LOG(FATAL) << "Error: Unrecognized byte code " << int(op_code);
