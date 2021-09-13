@@ -10,6 +10,13 @@
 #include "../universe.h"
 #include "bytecode.h"
 
+Interpreter::Interpreter() {
+    buildins_ = new Map<Object *, Object *>;
+    buildins_->insert({new String("True"), Universe::True});
+    buildins_->insert({new String("False"), Universe::False});
+    buildins_->insert({new String("None"), Universe::None});
+}
+
 void Interpreter::push(Object *o) { frame_->stack()->push_back(o); }
 
 Object *Interpreter::pop() {
@@ -86,6 +93,12 @@ void Interpreter::eval_frame() {
             case ByteCode::GREATER_EQUAL:
                 push(v->ge(w));
                 break;
+            case ByteCode::IS:
+                v == w ? push(Universe::True) : push(Universe::False);
+                break;
+            case ByteCode::IS_NOT:
+                v == w ? push(Universe::False) : push(Universe::True);
+                break;
             default:
                 LOG(FATAL) << "Error: Unrecognized compare op " << int(op_arg);
             }
@@ -147,7 +160,15 @@ void Interpreter::eval_frame() {
                     break;
                 }
             }
+            if (buildins_->contains(v)) {
+                w = buildins_->at(v);
+                if (w != Universe::None) {
+                    push(w);
+                    break;
+                }
+            }
             push(Universe::None);
+            break;
         case ByteCode::LOAD_GLOBAL:
             v = frame_->names()->at(op_arg);
             if (frame_->globals()->contains(v)) {

@@ -34,6 +34,11 @@ public:
         NOT_EQUAL,
         GREATER,
         GREATER_EQUAL,
+        IN,
+        NOT_IN,
+        IS,
+        IS_NOT,
+        EXC_MATCH
     };
 };
 

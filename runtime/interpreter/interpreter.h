@@ -11,9 +11,11 @@
 
 class Interpreter {
 public:
+    Interpreter();
     void run(CodeObject *codes);
 
 private:
+    Map<Object *, Object *> *buildins_;
     FrameObject *frame_;
     inline void push(Object *o);
     inline Object *pop();
