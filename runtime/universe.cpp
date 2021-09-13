@@ -12,7 +12,7 @@ Object *Universe::None = nullptr;
 void Universe::genesis() {
     True = new Integer(1);
     False = new Integer(0);
-    None = new String("None");
+    None = String::get_instance("None");
 }
 
 void Universe::destroy() {}

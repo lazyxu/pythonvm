@@ -44,7 +44,7 @@ CodeObject *BinaryFileParser::get_code_object() {
     String *module_name = get_name();
     auto begin_line_no = file_stream_->read_int();
     String *lnotab = get_no_table();
-    String *file_path = new String(file_stream_->get_file_path());
+    String *file_path = String::get_instance(file_stream_->get_file_path());
 
     return new CodeObject(arg_count, nlocals, stack_size, flags, byte_codes,
                           consts, names, var_names, free_vars, cell_vars,
@@ -65,7 +65,7 @@ String *BinaryFileParser::get_string() {
         str_val[i] = file_stream_->read();
     }
 
-    auto *s = new String(str_val, length);
+    auto *s = String::get_instance(str_val, length);
     delete[] str_val;
     return s;
 }

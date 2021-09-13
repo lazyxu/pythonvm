@@ -8,6 +8,7 @@
 #include "integer.h"
 #include "object.h"
 #include <cstdint>
+#include <vector>
 
 class StringKlass : public Klass {
 public:
@@ -24,15 +25,15 @@ private:
 
 class String : public Object {
 public:
-    explicit String(const char *value);
-
-    String(const char *value, int length);
-
+    static String *get_instance(const char *value);
+    static String *get_instance(const char *value, uint32_t length);
     const char *value() { return value_; };
 
     const uint32_t length() { return length_; };
 
 private:
+    static std::vector<String *> *cache_;
+    String(const char *value, uint32_t length);
     char *value_;
     uint32_t length_;
 };

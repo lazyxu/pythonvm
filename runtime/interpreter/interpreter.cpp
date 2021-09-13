@@ -12,10 +12,10 @@
 
 Interpreter::Interpreter() {
     buildins_ = new Map<Object *, Object *>;
-    buildins_->insert({new String("True"), Universe::True});
-    buildins_->insert({new String("False"), Universe::False});
-    buildins_->insert({new String("None"), Universe::None});
-    buildins_->insert({new String("len"), new FunctionObject(len)});
+    buildins_->insert({String::get_instance("True"), Universe::True});
+    buildins_->insert({String::get_instance("False"), Universe::False});
+    buildins_->insert({String::get_instance("None"), Universe::None});
+    buildins_->insert({String::get_instance("len"), new FunctionObject(len)});
 }
 
 void Interpreter::push(Object *o) { frame_->stack()->push_back(o); }
@@ -175,6 +175,13 @@ void Interpreter::eval_frame() {
             v = frame_->names()->at(op_arg);
             if (frame_->globals()->contains(v)) {
                 w = frame_->globals()->at(v);
+                if (w != Universe::None) {
+                    push(w);
+                    break;
+                }
+            }
+            if (buildins_->contains(v)) {
+                w = buildins_->at(v);
                 if (w != Universe::None) {
                     push(w);
                     break;

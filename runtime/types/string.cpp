@@ -48,18 +48,31 @@ Object *StringKlass::len(Object *o) {
     return new Integer(oo->length());
 }
 
-String::String(const char *value) {
-    length_ = strlen(value);
+String::String(const char *value, uint32_t length) {
+    length_ = length;
     value_ = new char[length_];
-    strcpy(value_, value);
+    memcpy(value_, value, length);
     set_klass(StringKlass::get_instance());
 }
 
-String::String(const char *value, int length) {
-    length_ = length;
-    value_ = new char[length_];
-    memcpy(value_, value, length_);
-    set_klass(StringKlass::get_instance());
+std::vector<String *> *String::cache_ = new std::vector<String *>();
+
+String *String::get_instance(const char *value, uint32_t length) {
+    for (const auto &item : *cache_) {
+        if (memcmp(item->value(), value, std::max(item->length(), length)) ==
+            0) {
+            return item;
+        }
+    }
+    auto value_ = new char[length];
+    memcpy(value_, value, length);
+    auto str = new String(value_, length);
+    cache_->emplace_back(str);
+    return str;
+}
+
+String *String::get_instance(const char *value) {
+    return get_instance(value, strlen(value));
 }
 
 bool operator==(const String &lhs, const String &rhs) {
