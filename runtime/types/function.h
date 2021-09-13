@@ -18,9 +18,23 @@ private:
     static FunctionKlass *klass;
 };
 
+class NativeFunctionKlass : public Klass {
+public:
+    static NativeFunctionKlass *get_instance();
+
+private:
+    NativeFunctionKlass();
+    static NativeFunctionKlass *klass;
+};
+
+typedef Object *(*NativeFuncPointer)(ArrayList<Object *> *);
+
 class FunctionObject : public Object {
 public:
     explicit FunctionObject(Object *o);
+    explicit FunctionObject(NativeFuncPointer nfp);
+
+    Object *call(ArrayList<Object *> *args) { return (*native_func_)(args); }
 
     String *func_name() { return code_object_->co_name_; };
 
@@ -34,9 +48,12 @@ public:
         }
     }
 
-    CodeObject *code_object_;
-    Map<Object *, Object *> *globals_;
-    ArrayList<Object *> *defaults_;
+    CodeObject *code_object_ = nullptr;
+    Map<Object *, Object *> *globals_ = nullptr;
+    ArrayList<Object *> *defaults_ = nullptr;
+    NativeFuncPointer native_func_ = nullptr;
 };
+
+Object *len(ArrayList<Object *> *args);
 
 #endif // PYTHONVM_RUNTIME_TYPES_FUNCTION_H

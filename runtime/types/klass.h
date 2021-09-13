@@ -29,6 +29,8 @@ public:
     virtual Object *div(Object *x, Object *y);
     virtual Object *mod(Object *x, Object *y);
 
+    virtual Object *len(Object *o);
+
 private:
     String *name_{};
 };

@@ -15,6 +15,7 @@ Interpreter::Interpreter() {
     buildins_->insert({new String("True"), Universe::True});
     buildins_->insert({new String("False"), Universe::False});
     buildins_->insert({new String("None"), Universe::None});
+    buildins_->insert({new String("len"), new FunctionObject(len)});
 }
 
 void Interpreter::push(Object *o) { frame_->stack()->push_back(o); }
@@ -223,6 +224,10 @@ void Interpreter::eval_frame() {
 }
 
 void Interpreter::build_frame(Object *v, ArrayList<Object *> *args) {
+    if (v->klass() == NativeFunctionKlass::get_instance()) {
+        push(static_cast<FunctionObject *>(v)->call(args));
+        return;
+    }
     auto frame = new FrameObject(dynamic_cast<FunctionObject *>(v), args);
     frame->set_prev(frame_);
     frame_ = frame;

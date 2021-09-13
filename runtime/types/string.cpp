@@ -40,6 +40,14 @@ Object *StringKlass::eq(Object *x, Object *y) {
                                                  : Universe::False;
 }
 
+Object *StringKlass::len(Object *o) {
+    auto *oo = dynamic_cast<String *>(o);
+
+    ASSERT(oo != nullptr && oo->klass() == this);
+
+    return new Integer(oo->length());
+}
+
 String::String(const char *value) {
     length_ = strlen(value);
     value_ = new char[length_];
@@ -52,4 +60,12 @@ String::String(const char *value, int length) {
     value_ = new char[length_];
     memcpy(value_, value, length_);
     set_klass(StringKlass::get_instance());
+}
+
+bool operator==(const String &lhs, const String &rhs) {
+    if (rhs.klass() != StringKlass::get_instance()) {
+        return false;
+    }
+    return StringKlass::get_instance()->eq(const_cast<String *>(&lhs),
+                                           const_cast<String *>(&rhs));
 }

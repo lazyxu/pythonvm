@@ -12,7 +12,7 @@ class Object {
 public:
     Object() = default;
     virtual ~Object() = default;
-    Klass *klass() {
+    Klass *klass() const {
         ASSERT(klass_ != nullptr);
         return klass_;
     }
@@ -26,6 +26,7 @@ public:
     Object *ne(Object *o) { return klass_->ne(this, o); };
     Object *greater(Object *o) { return klass_->greater(this, o); };
     Object *ge(Object *o) { return klass_->ge(this, o); };
+    Object *len() { return klass_->len(this); };
 
 private:
     Klass *klass_;

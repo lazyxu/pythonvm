@@ -5,6 +5,7 @@
 #ifndef PYTHONVM_RUNTIME_TYPES_STRING_H
 #define PYTHONVM_RUNTIME_TYPES_STRING_H
 
+#include "integer.h"
 #include "object.h"
 #include <cstdint>
 
@@ -14,6 +15,7 @@ public:
     void print(Object *o) override;
 
     Object *eq(Object *x, Object *y) override;
+    Object *len(Object *o) override;
 
 private:
     StringKlass();

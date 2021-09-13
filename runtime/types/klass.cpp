@@ -63,3 +63,8 @@ Object *Klass::mod(Object *x, Object *y) {
     LOG(FATAL) << "Unimplemented Operation!" << __func__;
     return nullptr;
 }
+
+Object *Klass::len(Object *o) {
+    LOG(FATAL) << "Unimplemented Operation!" << __func__;
+    return nullptr;
+}
